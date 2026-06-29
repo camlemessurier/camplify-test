@@ -27,13 +27,18 @@ services:
       RAILS_LOG_TO_STDOUT: "true"
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      args:
+        # Baked into the client JS bundle at build time — must match the host-exposed API port
+        NEXT_PUBLIC_API_URL: http://localhost:3000/api/v1
     ports:
       - "3001:3000"
     depends_on:
       - api
     environment:
-      NEXT_PUBLIC_API_URL: http://localhost:3000/api/v1
+      # API_URL: used by Next.js server-side code (SSR/RSC) — Docker internal hostname
+      API_URL: http://api:3000/api/v1
 
 volumes:
   postgres_data:

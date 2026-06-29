@@ -9,3 +9,6 @@
 
 # Logs
 *.log
+
+# Temp scripts
+frontend/screenshot.mjs
