@@ -1,0 +1,23 @@
+# Bundler
+/.bundle
+/vendor/bundle
+
+# Secrets & credentials
+/config/master.key
+/config/credentials/*.key
+/.env*
+
+# Rails runtime
+/tmp/
+/log/
+/storage/
+
+# Kamal deployment config (not relevant for submission)
+/.kamal/
+/config/deploy.yml
+
+# Test artefacts
+/coverage/
+
+# macOS
+.DS_Store

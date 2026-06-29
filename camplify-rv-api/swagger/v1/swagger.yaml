@@ -1,0 +1,396 @@
+---
+openapi: 3.0.1
+info:
+  title: RV Marketplace API
+  version: v1
+  description: A two-sided marketplace API connecting RV owners with renters
+paths:
+  "/api/v1/auth/register":
+    post:
+      summary: Register a new user
+      tags:
+      - Auth
+      parameters: []
+      responses:
+        '201':
+          description: user registered
+        '422':
+          description: invalid parameters
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Alice Smith
+                email:
+                  type: string
+                  example: alice@example.com
+                password:
+                  type: string
+                  example: password123
+              required:
+              - name
+              - email
+              - password
+  "/api/v1/auth/login":
+    post:
+      summary: Login
+      tags:
+      - Auth
+      parameters: []
+      responses:
+        '200':
+          description: login successful
+        '401':
+          description: invalid credentials
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+              - email
+              - password
+  "/api/v1/auth/logout":
+    delete:
+      summary: Logout
+      tags:
+      - Auth
+      security:
+      - bearerAuth: []
+      responses:
+        '204':
+          description: logged out successfully
+        '401':
+          description: unauthorized
+  "/api/v1/listings/{listing_id}/bookings":
+    parameters:
+    - name: listing_id
+      in: path
+      required: true
+      schema:
+        type: integer
+    post:
+      summary: Create a booking request
+      tags:
+      - Bookings
+      security:
+      - bearerAuth: []
+      parameters: []
+      responses:
+        '201':
+          description: booking created
+        '422':
+          description: invalid dates
+        '401':
+          description: unauthorized
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                start_date:
+                  type: string
+                  format: date
+                end_date:
+                  type: string
+                  format: date
+              required:
+              - start_date
+              - end_date
+  "/api/v1/bookings/as_hirer":
+    get:
+      summary: List bookings as hirer
+      tags:
+      - Bookings
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: bookings retrieved
+        '401':
+          description: unauthorized
+  "/api/v1/bookings/as_owner":
+    get:
+      summary: List bookings as owner
+      tags:
+      - Bookings
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: bookings retrieved
+        '401':
+          description: unauthorized
+  "/api/v1/bookings/{id}/confirm":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+    patch:
+      summary: Confirm a booking
+      tags:
+      - Bookings
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: booking confirmed
+        '403':
+          description: forbidden - not the listing owner
+        '422':
+          description: booking already processed
+  "/api/v1/bookings/{id}/reject":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+    patch:
+      summary: Reject a booking
+      tags:
+      - Bookings
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: booking rejected
+        '403':
+          description: forbidden - not the listing owner
+  "/api/v1/listings":
+    get:
+      summary: List all listings
+      tags:
+      - Listings
+      responses:
+        '200':
+          description: listings retrieved
+    post:
+      summary: Create a listing
+      tags:
+      - Listings
+      security:
+      - bearerAuth: []
+      parameters: []
+      responses:
+        '201':
+          description: listing created
+        '401':
+          description: unauthorized
+        '422':
+          description: invalid parameters
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                location:
+                  type: string
+                price_per_day:
+                  type: number
+              required:
+              - title
+              - description
+              - location
+              - price_per_day
+  "/api/v1/listings/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Get a listing
+      tags:
+      - Listings
+      responses:
+        '200':
+          description: listing found
+        '404':
+          description: not found
+    patch:
+      summary: Update a listing
+      tags:
+      - Listings
+      security:
+      - bearerAuth: []
+      parameters: []
+      responses:
+        '200':
+          description: listing updated
+        '403':
+          description: forbidden - not the owner
+        '401':
+          description: unauthorized
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                price_per_day:
+                  type: number
+    delete:
+      summary: Delete a listing
+      tags:
+      - Listings
+      security:
+      - bearerAuth: []
+      responses:
+        '204':
+          description: listing deleted
+        '403':
+          description: forbidden - not the owner
+  "/api/v1/listings/{listing_id}/messages":
+    parameters:
+    - name: listing_id
+      in: path
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: List messages for a listing
+      tags:
+      - Messages
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: messages retrieved by hirer with booking
+        '403':
+          description: forbidden - no booking and not owner
+        '401':
+          description: unauthorized
+    post:
+      summary: Send a message
+      tags:
+      - Messages
+      security:
+      - bearerAuth: []
+      parameters: []
+      responses:
+        '201':
+          description: message created by owner
+        '403':
+          description: forbidden - no booking and not owner
+        '422':
+          description: empty content
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+              required:
+              - content
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+    RvListing:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        location:
+          type: string
+        price_per_day:
+          type: string
+        owner:
+          "$ref": "#/components/schemas/User"
+        created_at:
+          type: string
+          format: date-time
+    Booking:
+      type: object
+      properties:
+        id:
+          type: integer
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        status:
+          type: string
+          enum:
+          - pending
+          - confirmed
+          - rejected
+        rv_listing:
+          type: object
+          properties:
+            id:
+              type: integer
+            title:
+              type: string
+            location:
+              type: string
+        created_at:
+          type: string
+          format: date-time
+    Message:
+      type: object
+      properties:
+        id:
+          type: integer
+        content:
+          type: string
+        user:
+          "$ref": "#/components/schemas/User"
+        created_at:
+          type: string
+          format: date-time
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+    Errors:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: string
+servers:
+- url: http://localhost:3000
+  description: Development server

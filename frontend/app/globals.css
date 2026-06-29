@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+:root {
+  --void:   #0a0604;
+  --crust:  #141009;
+  --rift:   #2a1a0c;
+  --lava:   #c73d0f;
+  --ember:  #e05a28;
+  --glow:   #f5a623;
+  --snow:   #faf6f2;
+  --smoke:  #d4c9be;
+  --ash:    #8c7b6e;
+}
+
+@theme inline {
+  --font-display: var(--font-fraunces);
+  --font-body: var(--font-outfit);
+}
+
+@layer base {
+  html, body {
+    background-color: #0a0604;
+    color: var(--smoke);
+    font-family: var(--font-outfit), "Helvetica Neue", sans-serif;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-fraunces), Georgia, serif;
+    color: var(--snow);
+  }
+}
