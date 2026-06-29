@@ -5,8 +5,8 @@ import type { RVListing, Booking, Message, AuthResponse } from "@/types";
 // Client-side (browser): always use NEXT_PUBLIC_API_URL (or the hardcoded default).
 const BASE_URL =
   typeof window === "undefined"
-    ? (process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000/api/v1")
-    : (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000/api/v1");
+    ? (process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:7777/api/v1")
+    : (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:7777/api/v1");
 
 function getToken(): string | null {
   if (typeof window === "undefined") return null;
