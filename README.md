@@ -1,4 +1,4 @@
-# RV Marketplace
+# Lampify
 
 A two-sided marketplace API and frontend connecting RV owners (lessors) with renters (hirers).
 
@@ -16,11 +16,11 @@ A two-sided marketplace API and frontend connecting RV owners (lessors) with ren
 
 ```bash
 # Start everything (PostgreSQL + Rails API + Next.js)
-docker-compose up --build
+docker compose up --build
 
-# API:      http://localhost:3000
-# Frontend: http://localhost:3001
-# API Docs: http://localhost:3000/api-docs
+# API:      http://localhost:7777
+# Frontend: http://localhost:8888
+# API Docs: http://localhost:7777/api-docs
 ```
 
 ---
@@ -39,7 +39,7 @@ docker run -d --name rv-postgres -e POSTGRES_PASSWORD=password -e POSTGRES_USER=
 # Configure config/database.yml with your connection details, then:
 rails db:create db:migrate db:seed
 
-rails server
+rails server -p 7777
 ```
 
 ### Frontend
@@ -47,7 +47,7 @@ rails server
 ```bash
 cd frontend
 npm install
-npm run dev   # http://localhost:3001
+npm run dev   # http://localhost:8888
 ```
 
 ---
@@ -78,21 +78,21 @@ npm run dev   # http://localhost:3001
 
 ### Register
 ```bash
-curl -X POST http://localhost:3000/api/v1/auth/register \
+curl -X POST http://localhost:7777/api/v1/auth/register \
   -H "Content-Type: application/json" \
   -d '{"name":"Alice","email":"alice@example.com","password":"password123"}'
 ```
 
 ### Login
 ```bash
-curl -X POST http://localhost:3000/api/v1/auth/login \
+curl -X POST http://localhost:7777/api/v1/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"owner1@example.com","password":"password123"}'
 ```
 
 ### Create a Listing
 ```bash
-curl -X POST http://localhost:3000/api/v1/listings \
+curl -X POST http://localhost:7777/api/v1/listings \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer <token>" \
   -d '{"title":"Byron Bay Camper","description":"Cozy van for the coast","location":"Byron Bay, NSW","price_per_day":150}'
@@ -100,7 +100,7 @@ curl -X POST http://localhost:3000/api/v1/listings \
 
 ### Create a Booking
 ```bash
-curl -X POST http://localhost:3000/api/v1/listings/1/bookings \
+curl -X POST http://localhost:7777/api/v1/listings/1/bookings \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer <hirer_token>" \
   -d '{"start_date":"2026-08-01","end_date":"2026-08-07"}'
@@ -108,7 +108,7 @@ curl -X POST http://localhost:3000/api/v1/listings/1/bookings \
 
 ### Send a Message
 ```bash
-curl -X POST http://localhost:3000/api/v1/listings/1/messages \
+curl -X POST http://localhost:7777/api/v1/listings/1/messages \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer <token>" \
   -d '{"content":"Is the RV pet-friendly?"}'

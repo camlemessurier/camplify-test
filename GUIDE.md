@@ -25,8 +25,8 @@ Lampify is a two-sided RV rental marketplace. Owners list their vans; hirers bro
 
 | App | Tech | Port (local dev) |
 |-----|------|-----------------|
-| `camplify-rv-api/` | Ruby on Rails 8, API-only mode, PostgreSQL | 3001 |
-| `frontend/` | Next.js 15 App Router, TypeScript, Tailwind CSS v4 | 3002 |
+| `camplify-rv-api/` | Ruby on Rails 8, API-only mode, PostgreSQL | 7777 |
+| `frontend/` | Next.js 15 App Router, TypeScript, Tailwind CSS v4 | 8888 |
 
 They communicate over HTTP: the frontend calls the Rails JSON API. There is no server-side rendering of Rails views — Rails only speaks JSON.
 
@@ -725,7 +725,7 @@ end
 bundle exec rake rswag:specs:swaggerize RAILS_ENV=test
 ```
 
-**To view the Swagger UI:** visit `http://localhost:3001/api-docs`
+**To view the Swagger UI:** visit `http://localhost:7777/api-docs`
 
 ---
 
@@ -752,19 +752,18 @@ For development, only PostgreSQL runs in Docker. Rails and Next.js run directly:
 # Start PostgreSQL (port 5433 — 5432 was taken)
 docker run -d --name pg-dev -e POSTGRES_PASSWORD=password -p 5433:5432 postgres:16-alpine
 
-# Start Rails API on port 3001
+# Start Rails API on port 7777
 cd camplify-rv-api
-bundle exec rails server -p 3001
+bundle exec rails server -p 7777
 
-# Start Next.js on port 3002
+# Start Next.js on port 8888
 cd frontend
-npm run dev -- -p 3002
+npm run dev -- -p 8888
 ```
 
 Port notes:
-- Port 3000 is intercepted by an IDE SSH proxy
 - Port 5432 was taken by another Postgres instance
-- Rails runs on 3001, Next.js on 3002
+- Rails runs on 7777, Next.js on 8888
 
 ### Environment config
 
@@ -774,7 +773,7 @@ Rails database config is in `config/database.yml`. For local dev it connects to:
 - Username: `postgres`
 - Password: `password`
 
-Next.js uses `NEXT_PUBLIC_API_URL` (defaults to `http://localhost:3000/api/v1` in `lib/api.ts`).
+Next.js uses `NEXT_PUBLIC_API_URL` (defaults to `http://localhost:7777/api/v1` in `lib/api.ts`).
 
 ---
 
